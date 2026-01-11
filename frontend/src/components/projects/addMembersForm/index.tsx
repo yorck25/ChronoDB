@@ -38,7 +38,7 @@ export const AddMembersForm = ({members, setMembers}: IAddMembersFormProps) => {
     }
 
     const filterFoundUsers = () => {
-        return foundUsers.filter((user) => {
+        return foundUsers?.filter((user) => {
             return !members.find((member) => {
                 return member.id === user.id
             })

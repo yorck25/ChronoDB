@@ -27,7 +27,7 @@ export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => 
         return (
             <div className={styles.members_container}>
 
-                {users.firstFiveMembers.slice(0, amountOfIcons).map((member: string) => (
+                {users.firstFiveMembers?.slice(0, amountOfIcons).map((member: string) => (
                     renderMember(member[0])
                 ))}
 

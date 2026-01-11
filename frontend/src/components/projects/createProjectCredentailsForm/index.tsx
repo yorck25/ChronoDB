@@ -1,5 +1,5 @@
 import type {ICreateProjectCredentialsData} from "../../../pages/projects";
-import React from "react";
+import React, {useEffect} from "react";
 import {useConfigContext} from "../../../contexts/connection-types.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import styles from "./style.module.scss";
@@ -57,6 +57,13 @@ export const CreateProjectCredentialsForm = ({connectionType, newCredentialsData
     }
 
     const [dbAuthData, setDbAuthData] = React.useState<DatabaseAuthData>(getDatabaseAuthDataTemplate() as DatabaseAuthData);
+
+    useEffect(() => {
+        setNewCredentialsData(prev => ({
+            ...prev,
+            databaseAuth: dbAuthData
+        }));
+    }, [dbAuthData]);
 
     const handleInput = (e: Event) => {
         const target = e.target as HTMLInputElement;
