@@ -1,9 +1,9 @@
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import style from "./style.module.scss";
-import {useAppContext} from "../../contexts/app.context";
-import {LogoutIcon} from "../ui/icons";
-import {Input, InputType} from "../ui/input";
-import {useState} from "react";
+import { useAppContext } from "../../contexts/app.context";
+import { LogoutIcon } from "../ui/icons";
+import { Input, InputType } from "../ui/input";
+import { useState } from "react";
 
 export const Sidebar = () => {
   const { logout } = useAppContext();
@@ -20,7 +20,15 @@ export const Sidebar = () => {
     <div className={style.sidebar}>
       <div className={style.top_container}>
         <div className={style.search_bar}>
-          <Input id={"search"} inputType={InputType.TEXT} value={searchValue} placeholder={"Search"} handleInput={(e: Event) => setSearchValue((e.target as HTMLInputElement).value)} />
+          <Input
+            id={"search"}
+            inputType={InputType.TEXT}
+            value={searchValue}
+            placeholder={"Search"}
+            handleInput={(e: Event) =>
+              setSearchValue((e.target as HTMLInputElement).value)
+            }
+          />
         </div>
 
         <div className={style.divider} />

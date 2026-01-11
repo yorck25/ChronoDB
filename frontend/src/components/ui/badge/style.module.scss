@@ -1,0 +1,19 @@
+@use "../../../styles/variables" as *;
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6;
+    padding: 0.25rem 1rem;
+    border-radius: $border-radius-medium;
+    font-size: 18px;
+    font-weight: 400;
+    height: 1.5rem;
+    line-height: 16px;
+    white-space: nowrap;
+
+    &.neutral {
+        background-color: #e0e0e0;
+        color: #333333;
+    }
+}

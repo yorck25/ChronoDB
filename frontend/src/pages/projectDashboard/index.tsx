@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useProjectContext} from "../../contexts/projects.context.tsx";
 import {useEffect, useState} from "react";
 import type {IProjectWithUsers} from "../../models/projects.models.ts";
+import {DatabaseOverview} from "../../components/databaseOverview";
 
 export const ProjectDashboard = () => {
     const {projectId} = useParams();
@@ -83,7 +84,7 @@ export const ProjectDashboard = () => {
 
             <div className={styles.content_container}>
                 {activeTab === "Overview" && (
-                    <>Not implemented yet.</>
+                    <DatabaseOverview projectId={projectId} />
                 )}
 
                 {activeTab === "Database" && (

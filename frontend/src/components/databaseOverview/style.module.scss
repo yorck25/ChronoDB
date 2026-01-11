@@ -1,0 +1,48 @@
+@use "../../styles/variables" as *;
+
+.project-overview-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 8px;
+  font-family: $primary-font-family;
+
+  .overview-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    .section-left {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+
+      .overview-headline {
+        font-size: 32px;
+        font-weight: 800;
+      }
+    }
+
+    .section-right {
+      margin-left: auto;
+
+      .overview-project-id {
+        font-size: 16px;
+        color: $gray-800;
+
+        span {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .stat-cards-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+}
