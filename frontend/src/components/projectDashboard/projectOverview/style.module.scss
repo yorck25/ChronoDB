@@ -1,4 +1,4 @@
-@use "../../styles/variables" as *;
+@use "../../../styles/variables" as *;
 
 .project-overview-container {
   display: flex;
@@ -21,7 +21,7 @@
 
       .overview-headline {
         font-size: 32px;
-        font-weight: 800;
+        font-weight: 600;
       }
     }
 

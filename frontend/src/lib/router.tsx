@@ -8,8 +8,8 @@ import {ProjectContextProvider} from "../contexts/projects.context";
 import {useEffect} from "react";
 import {useAppContext} from "../contexts/app.context.tsx";
 import {ProjectDashboard} from "../pages/projectDashboard";
-import {DatabaseBrowser} from "../components/databaseBrowser";
 import {DatabaseWorkerContextProvider} from "../contexts/databaseWorker.context.tsx";
+import {DatabaseBrowser} from "../pages/databaseBrowser";
 
 export const Router = () => {
     const navigate = useNavigate();

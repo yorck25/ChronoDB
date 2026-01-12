@@ -3,7 +3,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useProjectContext} from "../../contexts/projects.context.tsx";
 import {useEffect, useState} from "react";
 import type {IProjectWithUsers} from "../../models/projects.models.ts";
-import {DatabaseOverview} from "../../components/databaseOverview";
+import {ProjectOverview} from "../../components/projectDashboard/projectOverview";
+import {ProjectSettings} from "../../components/projectDashboard/projectSettings";
 
 export const ProjectDashboard = () => {
     const {projectId} = useParams();
@@ -84,11 +85,11 @@ export const ProjectDashboard = () => {
 
             <div className={styles.content_container}>
                 {activeTab === "Overview" && (
-                    <DatabaseOverview projectId={projectId} />
+                    <ProjectOverview projectId={Number(projectId)}/>
                 )}
 
                 {activeTab === "Database" && (
-                    <DatabaseBrowserNavigate />
+                    <DatabaseBrowserNavigate/>
                 )}
 
                 {activeTab === "Members" && (
@@ -104,7 +105,7 @@ export const ProjectDashboard = () => {
                 )}
 
                 {activeTab === "Settings" && (
-                    <>Not implemented yet.</>
+                    <ProjectSettings projectId={Number(projectId)}/>
                 )}
             </div>
         </div>
