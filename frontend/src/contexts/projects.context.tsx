@@ -21,6 +21,7 @@ interface IProjectContext {
     ensureProjectLoaded: (projectId: number) => Promise<IProjectWithUsers | undefined>;
     createProject: (cpr: ICreateProjectRequest) => Promise<boolean>;
     testConnection: (authData: DatabaseAuthData) => Promise<boolean>;
+    fetchProjectById: (projectId: number) => Promise<IProjectWithUsers | undefined>;
 }
 
 const ProjectContext = createContext<IProjectContext | undefined>(undefined);
@@ -52,8 +53,10 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
         }
     };
 
-    const getProjectById = (projectId: number): IProjectWithUsers | undefined => {
-        return projects?.find((p) => p.project.id === projectId);
+    const getProjectById = (id: number) => {
+        if (!projects || projects.length === 0) return undefined;
+
+        return projects.find((p) => p?.project?.id === id);
     };
 
     const fetchProjectById = async (projectId: number): Promise<IProjectWithUsers | undefined> => {
@@ -137,6 +140,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
         ensureProjectLoaded,
         createProject,
         testConnection,
+        fetchProjectById,
     };
 
     return (

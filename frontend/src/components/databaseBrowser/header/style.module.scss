@@ -1,0 +1,42 @@
+@use "../../../styles/variables" as *;
+
+.database-browser-header {
+  padding: 1rem 2.5rem;
+  border-bottom: 2px solid $highlight-blue ;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .database-path {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .project-name {
+      font-size: 24px;
+      font-weight: 500;
+      color: $black;
+    }
+
+    .path-divider {
+      padding: 0 .5rem;
+    }
+
+    p {
+      font-size: 20px;
+      font-weight: 300;
+      color: $gray-700;
+      margin: 0;
+    }
+  }
+
+  .control-buttons {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    max-width: 35%;
+    gap: 0.5rem;
+  }
+}
