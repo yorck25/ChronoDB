@@ -47,7 +47,7 @@
     height: 100%;
     aspect-ratio: 1 / 1;
     border: 5px solid variables.$white;
-    border-bottom-color: variables.$highlight-blue;
+    border-bottom-color: variables.$highlight-purple;
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;
@@ -70,7 +70,7 @@
 
 .default {
   //Color needs to be adjust to the website design
-  background: variables.$highlight-blue;
+  background: variables.$highlight-purple;
   color: #ffffff;
 }
 
@@ -86,7 +86,7 @@
 .outline {
   background: none;
   color: #000;
-  border: 1px solid variables.$highlight-blue;
+  border: 1px solid variables.$highlight-purple;
 
   svg {
     fill: #000;

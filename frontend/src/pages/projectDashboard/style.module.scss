@@ -48,13 +48,13 @@
         color: variables.$gray-700;
 
         &:hover {
-          color: variables.$highlight-blue;
+          color: variables.$highlight-purple;
           cursor: pointer;
         }
 
         &.active_tab {
-          color: variables.$highlight-blue;
-          border-bottom: 1px solid variables.$highlight-blue;
+          color: variables.$highlight-purple;
+          border-bottom: 1px solid variables.$highlight-purple;
         }
       }
     }
