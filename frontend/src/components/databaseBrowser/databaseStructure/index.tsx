@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import {useEffect, useState} from "react";
 import type {IDatabaseStructureResponse} from "../../../models/database.models.ts";
 import {useDatabaseWorkerContext} from "../../../contexts/databaseWorker.context.tsx";
-import {SchemaItem} from "../../../pages/databaseBrowser";
+import {SchemaItem} from "../schemaItem";
 
 interface IDatabaseStructureProps {
     project: IProject;
