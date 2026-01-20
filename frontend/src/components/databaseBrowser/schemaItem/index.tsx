@@ -9,24 +9,36 @@ export const SchemaItem = ({schema, expandedSchemas, expandedTables, onSchemaTog
     expandedTables: Set<string>,
     onSchemaToggle: (schemaName: string) => void,
     onTableToggle: (tableName: string) => void
-}) => (
-    <li>
-        <div className={styles.marker} />
+}) => {
+    const isSchemaOpen = (schemaName: string) => {
+        return expandedSchemas.has(schemaName);
+    }
 
-        {ChevronIcon()}
+    return (
+        <li className={`${styles['schema-item']} ${
+            isSchemaOpen(schema.schemaName) ? styles.expanded : ''
+        }`}>
+            <div onClick={() => onSchemaToggle(schema.schemaName)} className={styles['item-name']}>
+                <div className={styles.marker}/>
 
-        <p onClick={() => onSchemaToggle(schema.schemaName)}>{schema.schemaName}</p>
-        {expandedSchemas.has(schema.schemaName) && (
-            <ul>
-                {schema.tables.map(table => (
-                    <TableItem
-                        key={table.tableName}
-                        table={table}
-                        expandedTables={expandedTables}
-                        onToggle={onTableToggle}
-                    />
-                ))}
-            </ul>
-        )}
-    </li>
-);
+                <div className={styles['icon-container']}>{ChevronIcon()}</div>
+
+                <p>{schema.schemaName}</p>
+            </div>
+
+            {isSchemaOpen(schema.schemaName) && (
+                <ul className={styles['table-item-list']}>
+                    {schema.tables.map(table => (
+                        <TableItem
+                            key={table.tableName}
+                            table={table}
+                            expandedTables={expandedTables}
+                            onToggle={onTableToggle}
+                        />
+                    ))}
+                </ul>
+            )}
+        </li>
+
+    )
+}

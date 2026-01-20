@@ -105,7 +105,7 @@ const StructureList = ({projectId}: IStructureListProps) => {
 
     return (
         <div className={styles['structure-list']}>
-            <ul>
+            <ul className={styles['structure-list-list']}>
                 {databaseStructure?.schemas.map(schema => (
                     <SchemaItem
                         key={schema.schemaName}

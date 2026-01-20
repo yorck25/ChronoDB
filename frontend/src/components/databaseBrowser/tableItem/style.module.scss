@@ -1,0 +1,35 @@
+@use "../../../styles/variables" as *;
+
+.table-item {
+  padding-left: 2rem;
+
+  .table-item-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: $spacing-md;
+    height: 40px;
+
+    .marker {
+      border-top-left-radius: $border-radius-small;
+      border-bottom-left-radius: $border-radius-small;
+      z-index: 999;
+      width: 5px;
+      height: 100%;
+      background-color: $highlight-purple;
+    }
+
+    p{
+      user-select: none;
+    }
+
+    .icon-container {
+      height: 20px;
+      aspect-ratio: 1/1;
+
+      &#chevron {
+        rotate: 270deg;
+      }
+    }
+  }
+}

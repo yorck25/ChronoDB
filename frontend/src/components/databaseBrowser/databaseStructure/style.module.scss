@@ -35,7 +35,15 @@
 
 .structure-list {
   height: 80%;
-  padding: 1rem 2.5rem;
+  padding: 2rem 0;
+  overflow-y: auto;
+
+  .structure-list-list {
+    height: 50%;
+    margin: 0;
+    padding: 1rem 0;
+    list-style: none;
+  }
 }
 
 
