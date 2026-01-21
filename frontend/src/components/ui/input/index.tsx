@@ -1,4 +1,5 @@
 import styles from "./style.module.scss";
+import React from "react";
 
 export const enum InputType {
     TEXT = "text",
@@ -8,6 +9,8 @@ export const enum InputType {
     CHECKBOX = "checkbox",
     RADIO = "radio",
 }
+
+export type IconPosition = "leading" | "trailing";
 
 interface InputProps {
     id: string;
@@ -21,6 +24,8 @@ interface InputProps {
     disabled?: boolean;
     name?: string;
     limit?: number;
+    icon?: React.ReactNode;
+    iconPosition?: IconPosition;
 }
 
 export const Input = ({
@@ -34,10 +39,14 @@ export const Input = ({
                           checked,
                           disabled = false,
                           name,
-                            limit,
+                          limit,
+                          icon,
+                          iconPosition = "leading",
                       }: InputProps) => {
     const isCheckboxOrRadio =
         inputType === InputType.CHECKBOX || inputType === InputType.RADIO;
+
+    const showIcon = Boolean(icon) && !isCheckboxOrRadio;
 
     return (
         <div
@@ -51,11 +60,19 @@ export const Input = ({
                 </label>
             )}
 
-            {errorMessage && (
-                <p className={styles.error_message}>{errorMessage}</p>
-            )}
+            {errorMessage && <p className={styles.error_message}>{errorMessage}</p>}
 
-            <div className={styles.input_wrapper}>
+            <div
+                className={`${styles.input_wrapper} ${
+                    showIcon ? styles.with_icon : ""
+                } ${showIcon ? styles[`icon_${iconPosition}`] : ""}`}
+            >
+                {showIcon && (
+                    <span className={styles.icon} aria-hidden="true">
+            {icon}
+          </span>
+                )}
+
                 <input
                     minlength={0}
                     maxlength={limit ? limit : undefined}
