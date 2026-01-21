@@ -6,6 +6,7 @@ export const enum ButtonType {
     Outline = 'outline',
     Link = 'link',
     Text = 'text',
+    Icon = 'icon',
 }
 
 interface Props {
@@ -55,11 +56,12 @@ export const Button = (
             ) : (
                 <>
                     {icon && icon}
-                    <span>{text}</span>
+
+                    {type !== ButtonType.Icon &&
+                        <span>{text}</span>
+                    }
                 </>
             )}
-
         </button>
-    )
-        ;
+    );
 };

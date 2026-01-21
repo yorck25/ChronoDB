@@ -93,6 +93,18 @@
   }
 }
 
+.icon {
+  border: none;
+  background: none;
+  height: 100%;
+
+  svg {
+    height: 100%;
+    aspect-ratio: 1/1;
+    fill: variables.$black;
+  }
+}
+
 .link {
   background: none;
   color: blue;
