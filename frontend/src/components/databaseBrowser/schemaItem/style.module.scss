@@ -22,6 +22,7 @@
     }
 
     .icon-container {
+      margin-left: $spacing-sm;
       height: 20px;
       aspect-ratio: 1 / 1;
       rotate: 270deg;
@@ -30,6 +31,10 @@
         fill: $gray-900;
 
       }
+    }
+
+    .name {
+      margin-left: $spacing-sm;
     }
   }
 
@@ -42,6 +47,10 @@
   &.expanded {
     .item-name {
       background-color: $highlight-purple-light;
+
+      .icon-container {
+        rotate: 0deg;
+      }
     }
   }
 }

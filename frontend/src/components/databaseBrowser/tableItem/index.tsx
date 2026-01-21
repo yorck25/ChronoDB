@@ -1,12 +1,7 @@
 import type {IColumnStructureResponse, ITableStructureResponse} from "../../../models/database.models.ts";
 import {ChevronIcon, TableIcon} from "../../ui/icons";
 import styles from './style.module.scss';
-
-export const ColumnItem = ({column}: { column: IColumnStructureResponse }) => (
-    <li>
-        <p>{column.columnName} <span>{column.dataType}</span></p>
-    </li>
-);
+import {ColumnItem} from "../columItem";
 
 export const TableItem = ({table, expandedTables, onToggle}: {
     table: ITableStructureResponse,
@@ -18,11 +13,11 @@ export const TableItem = ({table, expandedTables, onToggle}: {
     }
 
     return (
-        <li className={`${styles['table-item']} ${
-            isTableExpanded(table.tableName) ? styles['expanded'] : 't'
-        }`}>
+        <li
+            className={`${styles['table-item']} ${isTableExpanded(table.tableName) ? styles.expanded : ''}`}
+        >
             <div onClick={() => onToggle(table.tableName)} className={styles['table-item-name']}>
-                {isTableExpanded(table.tableName) && <div className={styles.marker}/>}
+                <div className={`${styles.marker} ${isTableExpanded(table.tableName) && styles.visible}`}/>
 
                 <div className={styles['icon-container']} id={styles.chevron}>
                     {ChevronIcon()}
@@ -32,11 +27,11 @@ export const TableItem = ({table, expandedTables, onToggle}: {
                     {TableIcon()}
                 </div>
 
-                <p>{table.tableName}</p>
+                <p className={styles.name}>{table.tableName}</p>
             </div>
 
             {isTableExpanded(table.tableName) && (
-                <ul>
+                <ul className={styles['schema-list']}>
                     {table.columns.map((column: IColumnStructureResponse) => (
                         <ColumnItem key={`${column.columnName}_${column.dataType}`} column={column}/>
                     ))}

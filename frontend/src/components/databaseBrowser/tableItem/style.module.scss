@@ -1,13 +1,13 @@
 @use "../../../styles/variables" as *;
 
 .table-item {
-  padding-left: 2rem;
+  padding-left: 1rem;
 
   .table-item-name {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     height: 40px;
 
     .marker {
@@ -17,9 +17,14 @@
       width: 5px;
       height: 100%;
       background-color: $highlight-purple;
+      visibility: hidden;
+
+      &.visible {
+        visibility: visible;
+      }
     }
 
-    p{
+    p {
       user-select: none;
     }
 
@@ -29,6 +34,24 @@
 
       &#chevron {
         rotate: 270deg;
+      }
+    }
+  }
+
+  .schema-list {
+    padding-left: $spacing-xl;
+    flex: 1;
+    padding-right: $spacing-sm;
+  }
+
+  &.expanded {
+    .table-item-name {
+      background-color: $highlight-purple-lighter;
+
+      .icon-container {
+        &#chevron {
+          rotate: 0deg;
+        }
       }
     }
   }

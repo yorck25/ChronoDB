@@ -23,7 +23,7 @@ export const SchemaItem = ({schema, expandedSchemas, expandedTables, onSchemaTog
 
                 <div className={styles['icon-container']}>{ChevronIcon()}</div>
 
-                <p>{schema.schemaName}</p>
+                <p className={styles.name}>{schema.schemaName}</p>
             </div>
 
             {isSchemaOpen(schema.schemaName) && (
