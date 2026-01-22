@@ -14,8 +14,13 @@ export const DatabaseBrowser = () => {
 
     const fetchProject = async (id: number) => {
         const res = await fetchProjectById(id);
-        if (res) setProject(res);
-        return res;
+
+        if (res?.project?.id) {
+            setProject(res);
+            return res;
+        }
+
+        return undefined;
     };
 
     useEffect(() => {

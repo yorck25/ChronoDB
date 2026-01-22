@@ -6,7 +6,7 @@ import {Button, ButtonType} from "../../ui/button";
 export const ColumnItem = ({column}: { column: IColumnStructureResponse }) => {
     const renderDataTypeIcon = (dt: string) => {
         const numericDts = new Set(['integer', 'int']);
-        const alphabeticDts = new Set(['string', 'char']);
+        const alphabeticDts = new Set(['string', 'char', 'character varying']);
         const boolishDts = new Set(['bool', 'boolean']);
 
         if (numericDts.has(dt)) {

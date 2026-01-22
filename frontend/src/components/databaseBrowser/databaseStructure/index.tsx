@@ -4,6 +4,8 @@ import {useEffect, useState} from "react";
 import type {IDatabaseStructureResponse} from "../../../models/database.models.ts";
 import {useDatabaseWorkerContext} from "../../../contexts/databaseWorker.context.tsx";
 import {SchemaItem} from "../schemaItem";
+import {Input} from "../../ui/input";
+import {MagnifyingGlasIcon} from "../../ui/icons";
 
 interface IDatabaseStructureProps {
     project: IProject;
@@ -23,6 +25,7 @@ export const DatabaseStructure = ({project}: IDatabaseStructureProps) => {
 
 const StructureHeader = () => {
     const [activeFilter, setActiveFilter] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>('');
 
     const setFilter = (filterKey: string) => {
         if (activeFilter === filterKey) {
@@ -33,11 +36,22 @@ const StructureHeader = () => {
         setActiveFilter(filterKey);
     }
 
+    const onSearchInput = (e: Event) => {
+        setSearchValue((e.target as HTMLInputElement).value ?? "");
+    }
+
     return (
         <div className={styles['structure-header']}>
             <p className={styles.headline}>Database Structure</p>
 
-            <input placeholder={"Filter schema/tables..."}/>
+            <Input
+                id="schemaFilter"
+                placeholder="Filter schemas/tables..."
+                value={searchValue}
+                handleInput={onSearchInput}
+                icon={MagnifyingGlasIcon()}
+                iconPosition="leading"
+            />
 
             <div className={styles['filter-list']}>
                 <div onClick={() => setFilter('all')} className={styles['filter-item']}>
