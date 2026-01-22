@@ -5,9 +5,11 @@ import {useProjectContext} from "../../contexts/projects.context.tsx";
 import type {IProjectWithUsers} from "../../models/projects.models.ts";
 import {DatabaseStructure} from "../../components/databaseBrowser/databaseStructure";
 import styles from './style.module.scss';
+import {useDbBrowserContext} from "../../contexts/db-browser.context.tsx";
 
 export const DatabaseBrowser = () => {
     const {getProjectById, fetchProjectById} = useProjectContext();
+    const {openTable} = useDbBrowserContext();
     const {projectId} = useParams();
 
     const [project, setProject] = useState<IProjectWithUsers | undefined>();
@@ -46,6 +48,11 @@ export const DatabaseBrowser = () => {
                         <DatabaseStructure project={project.project}/>
 
                         <div>
+                            {openTable !== '' && (
+                                <>
+                                    {openTable}
+                                </>
+                            )}
                             Details
                         </div>
                     </div>
