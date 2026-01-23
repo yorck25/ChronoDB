@@ -99,9 +99,16 @@
   height: 100%;
 
   svg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
     aspect-ratio: 1/1;
     fill: variables.$black;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 }
 

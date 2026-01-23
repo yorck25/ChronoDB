@@ -1,6 +1,6 @@
 import type {ICreateProjectCredentialsData} from "../../../pages/projects";
 import React, {useEffect} from "react";
-import {useConfigContext} from "../../../contexts/connection-types.context.tsx";
+import {useConfigContext} from "../../../contexts/configContext.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import styles from "./style.module.scss";
 import {Input, InputType} from "../../ui/input";

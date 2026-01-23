@@ -1,6 +1,6 @@
 import styles from "./style.module.scss";
 import {ProjectVisibilityType} from "../../../enums/projects.enum.ts";
-import {useConfigContext} from "../../../contexts/connection-types.context.tsx";
+import {useConfigContext} from "../../../contexts/configContext.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import type {ICreateProjectFormData} from "../../../pages/projects";
 import React from "react";

@@ -2,7 +2,7 @@ import type {IColumnStructureResponse, ITableStructureResponse} from "../../../m
 import {ChevronIcon, TableIcon} from "../../ui/icons";
 import styles from './style.module.scss';
 import {ColumnItem} from "../columItem";
-import {useDbBrowserContext} from "../../../contexts/db-browser.context.tsx";
+import {useDbBrowserContext} from "../../../contexts/dbBrowser.context.tsx";
 
 export const TableItem = ({table, expandedTables, onToggle}: {
     table: ITableStructureResponse,
@@ -23,7 +23,8 @@ export const TableItem = ({table, expandedTables, onToggle}: {
         <li
             className={`${styles['table-item']} ${isTableExpanded(table.tableName) ? styles.expanded : ''}`}
         >
-            <div onDblClick={handleDoubleClick} onClick={() => onToggle(table.tableName)} className={styles['table-item-name']}>
+            <div onDblClick={handleDoubleClick} onClick={() => onToggle(table.tableName)}
+                 className={styles['table-item-name']}>
                 <div className={`${styles.marker} ${isTableExpanded(table.tableName) && styles.visible}`}/>
 
                 <div className={styles['icon-container']} id={styles.chevron}>
