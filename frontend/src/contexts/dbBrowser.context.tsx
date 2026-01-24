@@ -1,4 +1,4 @@
-import React, {createContext, type FC, type ReactNode, useContext, useEffect, useState} from "react";
+import React, {createContext, type FC, type ReactNode, useContext, useState} from "react";
 
 interface IDbBrowserContext {
     getProjectIdFromUri: () => string;
@@ -33,31 +33,8 @@ export const DbBrowserContextProvider: FC<{ children: ReactNode }> = ({children}
     const [openTable, setOpenTable] = useState<string>('');
     const [activeTab, setActiveTab] = useState<number | undefined>(undefined);
 
-    useEffect(() => {
-        console.log("fake tabs");
-
-        const dumm1: IDBBrowserTab = {
-            id: 21,
-            name: "Query 1",
-            type: BrowserTabType.QUERY,
-            schemaName: "public",
-            tableName: "products",
-            createdAt: new Date()
-        }
-
-        const dumm2: IDBBrowserTab = {
-            id: 22,
-            name: "Query 1",
-            type: BrowserTabType.QUERY,
-            schemaName: "public",
-            tableName: "products",
-            createdAt: new Date()
-        }
-        setBrowserTabs([dumm1, dumm2]);
-    }, []);
-
     const createNewQueryTab = (schemaName?: string, tableName?: string) => {
-        const id = Math.floor(Math.random()*990) + 10;
+        const id = Math.floor(Math.random() * 990) + 10;
 
         const newQueryTab: IDBBrowserTab = {
             id: id,

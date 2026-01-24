@@ -7,6 +7,7 @@ import {DatabaseStructure} from "../../components/databaseBrowser/databaseStruct
 import styles from './style.module.scss';
 import {DetailTabBar} from "../../components/databaseBrowser/detail/detailTabBar";
 import {BrowserTabType, useDbBrowserContext} from "../../contexts/dbBrowser.context.tsx";
+import {QueryTab} from "../../components/databaseBrowser/detail/queryTab";
 
 export const DatabaseBrowser = () => {
     const {getProjectById, fetchProjectById} = useProjectContext();
@@ -79,7 +80,7 @@ export const DatabaseBrowser = () => {
                     {activeTabObj ? (
                         <div>
                             {activeTabObj.type === BrowserTabType.QUERY && (
-                                <div>Query</div>
+                                <QueryTab project={project.project}/>
                             )}
 
                             {activeTabObj.type === BrowserTabType.OVERVIEW && (

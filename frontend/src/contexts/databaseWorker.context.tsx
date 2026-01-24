@@ -11,6 +11,7 @@ interface IDatabaseWorkerContext {
     setDatabaseWorker: Dispatch<IConnectionType[] | undefined>;
 
     fetchDatabaseStructure: (projectId: number) => Promise<IDatabaseStructureResponse | undefined>;
+    executeQuery: (projectId: number, query: string) => Promise<any | undefined>;
 }
 
 const DatabaseWorkerContext = createContext<IDatabaseWorkerContext | undefined>(undefined);
@@ -28,7 +29,27 @@ export const DatabaseWorkerContextProvider: FC<{ children: ReactNode }> = ({chil
         }
 
         const res = await fetch(`${WORKER_API_BASE_URL}/db-structure?project_id=${projectId}`, requestOptions);
-        if(res.status !== 200) {
+        if (res.status !== 200) {
+            return;
+        }
+
+        return res.json();
+    }
+
+    const executeQuery = async (projectId: number, query: string) => {
+        const header = setAuthHeader();
+        header.append("Content-Type", "application/json");
+
+        const requestOptions: RequestInit = {
+            method: NetworkAdapter.POST,
+            headers: header,
+            body: JSON.stringify({
+                'query': query
+            }),
+        }
+
+        const res = await fetch(`${WORKER_API_BASE_URL}/execute-query?project_id=${projectId}`, requestOptions);
+        if (res.status !== 200) {
             return;
         }
 
@@ -39,6 +60,7 @@ export const DatabaseWorkerContextProvider: FC<{ children: ReactNode }> = ({chil
         DatabaseWorker,
         setDatabaseWorker,
         fetchDatabaseStructure,
+        executeQuery,
     };
 
     return (
