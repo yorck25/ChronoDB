@@ -1,34 +1,22 @@
-import {type IDBBrowserQueryTab, useDbBrowserContext} from "../../../../contexts/dbBrowser.context.tsx";
+import {type IDBBrowserTab, useDbBrowserContext} from "../../../../contexts/dbBrowser.context.tsx";
 import styles from './style.module.scss';
 import {Button, ButtonType} from "../../../ui/button";
 import {CloseIcon} from "../../../ui/icons";
-import React, {useEffect, useState} from "react";
+import React from "react";
 
-export const DetailTabBar = () => {
-    const {browserQueryTabs} = useDbBrowserContext();
-    const [activeTab, setActiveTab] = useState<number | undefined>(browserQueryTabs.length ? 0 : undefined);
+interface IBrowserTabBarProps {
+}
 
-    useEffect(() => {
-        if (browserQueryTabs.length === 0) {
-            setActiveTab(undefined);
-            return;
-        }
-
-        setActiveTab(prev => {
-            if (prev == null) return 0;
-            return Math.min(prev, browserQueryTabs.length - 1);
-        });
-    }, [browserQueryTabs.length]);
+export const DetailTabBar = ({}: IBrowserTabBarProps) => {
+    const {browserTabs, setActiveTab} = useDbBrowserContext();
 
     return (
         <div className={styles['tab-bar']}>
             <ul className={styles['tab-bar-list']}>
-                {browserQueryTabs.map((btq, index) => (
+                {browserTabs.map(bt => (
                     <BrowserTabItem
-                        key={btq.id}
-                        index={index}
-                        browserQueryTab={btq}
-                        activeTab={activeTab}
+                        key={bt.id}
+                        browserTab={bt}
                         setActiveTab={setActiveTab}
                     />
                 ))}
@@ -38,22 +26,20 @@ export const DetailTabBar = () => {
 };
 
 interface IBrowserTabItemProps {
-    index: number;
-    browserQueryTab: IDBBrowserQueryTab;
-    activeTab: number | undefined;
+    browserTab: IDBBrowserTab;
     setActiveTab: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-const BrowserTabItem = ({index, browserQueryTab, activeTab, setActiveTab}: IBrowserTabItemProps) => {
-    const {browserQueryTabs, setBrowserQueryTabs} = useDbBrowserContext();
+const BrowserTabItem = ({browserTab}: IBrowserTabItemProps) => {
+    const {browserTabs, setBrowserTabs, activeTab, setActiveTab} = useDbBrowserContext();
 
     const closeTab = (e: MouseEvent) => {
         e.stopPropagation();
 
-        const closingIndex = browserQueryTabs.findIndex(t => t.id === browserQueryTab.id);
-        const nextTabs = browserQueryTabs.filter(t => t.id !== browserQueryTab.id);
+        const closingIndex = browserTabs.findIndex(t => t.id === browserTab.id);
+        const nextTabs = browserTabs.filter(t => t.id !== browserTab.id);
 
-        setBrowserQueryTabs(nextTabs);
+        setBrowserTabs(nextTabs);
 
         setActiveTab((prev) => {
             if (nextTabs.length === 0) return undefined;
@@ -67,12 +53,20 @@ const BrowserTabItem = ({index, browserQueryTab, activeTab, setActiveTab}: IBrow
         });
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+        if (e.type === 'mousedown') {
+            e.preventDefault();
+            closeTab(e)
+        }
+    }
+
     return (
         <li
-            className={`${styles['tab-item']} ${activeTab === index ? styles.active : ''}`}
-            onClick={() => setActiveTab(index)}
+            className={`${styles['tab-item']} ${activeTab === browserTab.id ? styles.active : ''}`}
+            onClick={() => setActiveTab(browserTab.id)}
+            onMouseDown={(e) => handleMouseDown(e)}
         >
-            <p className={styles['tab-name']}>{browserQueryTab.name}</p>
+            <p className={styles['tab-name']}>{browserTab.name}</p>
 
             <div className={styles['close-button-wrapper']}>
                 <Button

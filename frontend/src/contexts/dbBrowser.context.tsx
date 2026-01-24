@@ -1,16 +1,26 @@
-import {createContext, type FC, type ReactNode, useContext, useEffect, useState} from "react";
+import React, {createContext, type FC, type ReactNode, useContext, useEffect, useState} from "react";
 
 interface IDbBrowserContext {
     getProjectIdFromUri: () => string;
     openTable: string;
-    browserQueryTabs: IDBBrowserQueryTab[];
-    setBrowserQueryTabs: (tabs: IDBBrowserQueryTab[]) => void;
+    browserTabs: IDBBrowserTab[];
+    setBrowserTabs: (tabs: IDBBrowserTab[]) => void;
     setOpenTable: (v: string) => void;
+    activeTab: number | undefined;
+    setActiveTab: React.Dispatch<React.SetStateAction<number | undefined>>;
+    getActiveTabFromId: () => IDBBrowserTab | undefined;
+    createNewQueryTab: (schemaName?: string, tableName?: string) => void;
 }
 
-export interface IDBBrowserQueryTab {
+export enum BrowserTabType {
+    QUERY = 'query',
+    OVERVIEW = 'overview'
+}
+
+export interface IDBBrowserTab {
     id: number;
     name: string;
+    type: BrowserTabType;
     schemaName: string;
     tableName: string;
     createdAt: Date;
@@ -19,41 +29,67 @@ export interface IDBBrowserQueryTab {
 const DbBrowserContext = createContext<IDbBrowserContext | undefined>(undefined);
 
 export const DbBrowserContextProvider: FC<{ children: ReactNode }> = ({children}) => {
-    const [browserQueryTabs, setBrowserQueryTabs] = useState<IDBBrowserQueryTab[]>([]);
+    const [browserTabs, setBrowserTabs] = useState<IDBBrowserTab[]>([]);
     const [openTable, setOpenTable] = useState<string>('');
+    const [activeTab, setActiveTab] = useState<number | undefined>(undefined);
 
     useEffect(() => {
         console.log("fake tabs");
 
-        const dumm1: IDBBrowserQueryTab = {
+        const dumm1: IDBBrowserTab = {
             id: 21,
             name: "Query 1",
+            type: BrowserTabType.QUERY,
             schemaName: "public",
             tableName: "products",
             createdAt: new Date()
         }
 
-        const dumm2: IDBBrowserQueryTab = {
+        const dumm2: IDBBrowserTab = {
             id: 22,
             name: "Query 1",
+            type: BrowserTabType.QUERY,
             schemaName: "public",
             tableName: "products",
             createdAt: new Date()
         }
+        setBrowserTabs([dumm1, dumm2]);
+    }, []);
 
-        setBrowserQueryTabs([dumm1, dumm2]);
-    }, [])
+    const createNewQueryTab = (schemaName?: string, tableName?: string) => {
+        const id = Math.floor(Math.random()*990) + 10;
+
+        const newQueryTab: IDBBrowserTab = {
+            id: id,
+            name: 'Query ' + id.toString(),
+            type: BrowserTabType.QUERY,
+            schemaName: schemaName ?? '',
+            tableName: tableName ?? '',
+            createdAt: new Date()
+        }
+
+        setBrowserTabs((prev) => [...prev, newQueryTab]);
+        setActiveTab(id);
+    }
 
     const getProjectIdFromUri = () => {
         return ""
     }
 
+    const getActiveTabFromId = () => {
+        return browserTabs.find(tab => tab.id === activeTab);
+    }
+
     const dbBrowserContextValue: IDbBrowserContext = {
         openTable,
         setOpenTable,
-        browserQueryTabs,
-        setBrowserQueryTabs,
+        browserTabs,
+        setBrowserTabs,
+        activeTab,
+        setActiveTab,
         getProjectIdFromUri,
+        getActiveTabFromId,
+        createNewQueryTab
     }
 
     return (
