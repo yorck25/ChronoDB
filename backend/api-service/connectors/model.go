@@ -1,6 +1,7 @@
 package connectors
 
 import (
+	"backend/common"
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
@@ -8,7 +9,7 @@ import (
 
 type DBConnector interface {
 	Connect(connectionString string) (*sql.DB, error)
-	ExecuteQuery(projectID int, query string) ([]map[string]any, error)
+	ExecuteQuery(projectID int, query string) (*common.DatabaseQueryResult, error)
 	GetVersionQuery() string
 	GetDatabaseStructure(projectID int) (*DatabaseStructureResponse, error)
 	BuildConnectionString(projectID int, metaDB *sqlx.DB) (string, error)

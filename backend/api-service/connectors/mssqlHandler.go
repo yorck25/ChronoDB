@@ -1,10 +1,12 @@
 package connectors
 
 import (
+	"backend/common"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 
@@ -63,7 +65,8 @@ func (m *MSSQLConnector) BuildConnectionString(projectID int, metaDB *sqlx.DB) (
 	return connectionString, nil
 }
 
-func (m *MSSQLConnector) ExecuteQuery(projectID int, query string) ([]map[string]any, error) {
+func (m *MSSQLConnector) ExecuteQuery(projectID int, query string) (*common.DatabaseQueryResult, error) {
+
 	conStr, err := m.BuildConnectionString(projectID, m.MetaDataClient)
 	if err != nil {
 		return nil, err
@@ -74,6 +77,29 @@ func (m *MSSQLConnector) ExecuteQuery(projectID int, query string) ([]map[string
 		return nil, err
 	}
 	defer db.Close()
+
+	normalized := strings.TrimSpace(strings.ToLower(query))
+
+	isRead :=
+		strings.HasPrefix(normalized, "select") ||
+			strings.HasPrefix(normalized, "with") ||
+			strings.HasPrefix(normalized, "exec") ||
+			strings.HasPrefix(normalized, "execute")
+
+	if !isRead {
+		res, err := db.Exec(query)
+		if err != nil {
+			return nil, err
+		}
+
+		ra, _ := res.RowsAffected()
+
+		return &common.DatabaseQueryResult{
+			Kind:         "write",
+			RowsAffected: ra,
+			Message:      "Query executed successfully",
+		}, nil
+	}
 
 	rows, err := db.Query(query)
 	if err != nil {
@@ -90,35 +116,34 @@ func (m *MSSQLConnector) ExecuteQuery(projectID int, query string) ([]map[string
 
 	for rows.Next() {
 		values := make([]any, len(cols))
-		valuePtrs := make([]any, len(cols))
+		ptrs := make([]any, len(cols))
 		for i := range values {
-			valuePtrs[i] = &values[i]
+			ptrs[i] = &values[i]
 		}
 
-		if err := rows.Scan(valuePtrs...); err != nil {
+		if err := rows.Scan(ptrs...); err != nil {
 			return nil, err
 		}
 
-		rowMap := make(map[string]any, len(cols))
+		row := make(map[string]any, len(cols))
 		for i, col := range cols {
-			v := values[i]
-
-			switch val := v.(type) {
-			case []byte:
-				rowMap[col] = string(val)
-			default:
-				rowMap[col] = val
+			if b, ok := values[i].([]byte); ok {
+				row[col] = string(b)
+			} else {
+				row[col] = values[i]
 			}
 		}
-
-		out = append(out, rowMap)
+		out = append(out, row)
 	}
 
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return out, nil
+	return &common.DatabaseQueryResult{
+		Kind: "rows",
+		Rows: out,
+	}, nil
 }
 
 func (m MSSQLConnector) GetVersionQuery() string {

@@ -26,7 +26,7 @@ func HandleGetDatabaseVersion(ctx *core.WebContext) error {
 		return ctx.InternalError(err.Error())
 	}
 
-	return ctx.Sucsess(result[0])
+	return ctx.Sucsess(result)
 }
 
 func HandleGetDatabaseStructure(ctx *core.WebContext) error {
