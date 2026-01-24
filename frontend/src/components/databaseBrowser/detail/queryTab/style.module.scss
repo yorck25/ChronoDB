@@ -28,14 +28,18 @@
   }
 
   .query-response-section {
+    padding: $spacing-sm $spacing-lg;
     width: 100%;
     background: $white;
     border: 1px solid $border-color;
     border-radius: $border-radius-medium;
     box-shadow: $shadow-light;
     overflow: hidden;
-
     overflow-x: auto;
+
+    .info-container {
+
+    }
 
     table {
       width: 100%;

@@ -5,6 +5,7 @@ import {Button, ButtonType} from "../../../ui/button";
 import {PlayIcon} from "../../../ui/icons";
 import {Textarea} from "../../../ui/textarea";
 import styles from "./style.module.scss";
+import type {IDatabaseQueryResult} from "../../../../models/database.models.ts";
 
 interface IQueryTabProps {
     project: IProject;
@@ -13,10 +14,14 @@ interface IQueryTabProps {
 export const QueryTab = ({project}: IQueryTabProps) => {
     const {executeQuery} = useDatabaseWorkerContext();
 
-    const [query, setQuery] = useState<string>("INSERT INTO products (id, name, created_at, deleted) VALUES (4, 'pen', now(), false);");
-    const [queryResponse, setQueryResponse] = useState<any>(undefined);
+    const [query, setQuery] = useState<string>("");
+    const [queryResponse, setQueryResponse] = useState<IDatabaseQueryResult | undefined>(undefined);
 
     const sendQuery = () => {
+        if (query.trim() === '') {
+            return;
+        }
+
         executeQuery(project.id, query).then((r) => {
             setQueryResponse(r);
         })
@@ -34,26 +39,17 @@ export const QueryTab = ({project}: IQueryTabProps) => {
     }
 
     const getColumns = (qr: any) => {
-        if (!qr) {
-            return [];
-        }
-
-        if (!Array.isArray(qr) || qr.length === 0) {
+        if (!qr || !Array.isArray(qr) || qr.length === 0) {
             return []
         }
 
-        console.log(qr)
-
         const cols: string[] = [];
 
-        for (const [key, value] of Object.entries(qr[0])) {
-            console.log(`${key}: ${value}`);
+        for (const [key] of Object.entries(qr[0])) {
             cols.push(key);
         }
 
-        cols.sort();
-
-        return cols;
+        return cols.sort();
     }
 
     const formatCellValue = (value: unknown): string => {
@@ -74,8 +70,8 @@ export const QueryTab = ({project}: IQueryTabProps) => {
         return String(value);
     };
 
-    const rows = Array.isArray(queryResponse) ? queryResponse : [];
-    const columns = getColumns(rows);
+    const rows = Array.isArray(queryResponse?.rows) ? queryResponse?.rows : [];
+    const columns = getColumns(queryResponse?.rows);
 
     return (
         <div className={styles['query-tab']}>
@@ -92,6 +88,15 @@ export const QueryTab = ({project}: IQueryTabProps) => {
             </div>
 
             <div className={styles['query-response-section']}>
+                <div className={styles['info-container']}>
+                    {queryResponse?.rowsAffected && (
+                        <p>Rows affected {queryResponse.rowsAffected}</p>
+                    )}
+                    {queryResponse?.message && (
+                        <p>{queryResponse.message}</p>
+                    )}
+                </div>
+
                 <table>
                     <thead>
                     <tr>
@@ -103,7 +108,7 @@ export const QueryTab = ({project}: IQueryTabProps) => {
 
                     <tbody>
                     {rows.map((row, rowIndex) => (
-                        <tr key={row?.id ?? rowIndex}>
+                        <tr key={row?.id + rowIndex}>
                             {columns.map((col) => (
                                 <td key={`${rowIndex}-${col}`}>
                                     {formatCellValue(row?.[col])}
