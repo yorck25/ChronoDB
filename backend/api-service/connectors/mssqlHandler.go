@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 
 	_ "github.com/denisenkom/go-mssqldb"
@@ -62,8 +63,8 @@ func (m *MSSQLConnector) BuildConnectionString(projectID int, metaDB *sqlx.DB) (
 	return connectionString, nil
 }
 
-func (m *MSSQLConnector) ExecuteQuery(projectId int, query string) (*sql.Rows, error) {
-	conStr, err := m.BuildConnectionString(projectId, m.MetaDataClient)
+func (m *MSSQLConnector) ExecuteQuery(projectID int, query string) ([]map[string]any, error) {
+	conStr, err := m.BuildConnectionString(projectID, m.MetaDataClient)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,51 @@ func (m *MSSQLConnector) ExecuteQuery(projectId int, query string) (*sql.Rows, e
 		return nil, err
 	}
 	defer db.Close()
-	return db.Query(query)
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]map[string]any, 0, 50)
+
+	for rows.Next() {
+		values := make([]any, len(cols))
+		valuePtrs := make([]any, len(cols))
+		for i := range values {
+			valuePtrs[i] = &values[i]
+		}
+
+		if err := rows.Scan(valuePtrs...); err != nil {
+			return nil, err
+		}
+
+		rowMap := make(map[string]any, len(cols))
+		for i, col := range cols {
+			v := values[i]
+
+			switch val := v.(type) {
+			case []byte:
+				rowMap[col] = string(val)
+			default:
+				rowMap[col] = val
+			}
+		}
+
+		out = append(out, rowMap)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return out, nil
 }
 
 func (m MSSQLConnector) GetVersionQuery() string {

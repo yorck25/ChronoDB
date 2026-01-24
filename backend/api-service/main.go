@@ -8,6 +8,7 @@ import (
 	"backend/release"
 	"backend/user"
 	"backend/version"
+
 	"github.com/labstack/echo/v4/middleware"
 )
 
@@ -61,6 +62,7 @@ func main() {
 	//---------------------------------
 	workerRoot.GET("/db-version", databaseWorker.HandleGetDatabaseVersion)
 	workerRoot.GET("/db-structure", databaseWorker.HandleGetDatabaseStructure)
+	workerRoot.POST("/execute-query", databaseWorker.HandleDatabaseQuery)
 
 	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }

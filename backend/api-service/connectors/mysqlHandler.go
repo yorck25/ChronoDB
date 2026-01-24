@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -67,7 +68,7 @@ func (m MySQLConnector) GetVersionQuery() string {
 	return "SELECT VERSION();"
 }
 
-func (m *MySQLConnector) ExecuteQuery(projectID int, query string) (*sql.Rows, error) {
+func (m *MySQLConnector) ExecuteQuery(projectID int, query string) ([]map[string]any, error) {
 	conStr, err := m.BuildConnectionString(projectID, m.MetaDataClient)
 	if err != nil {
 		return nil, err
@@ -78,7 +79,50 @@ func (m *MySQLConnector) ExecuteQuery(projectID int, query string) (*sql.Rows, e
 		return nil, err
 	}
 	defer db.Close()
-	return db.Query(query)
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]map[string]any, 0, 50)
+
+	for rows.Next() {
+		values := make([]any, len(cols))
+		valuePtrs := make([]any, len(cols))
+		for i := range values {
+			valuePtrs[i] = &values[i]
+		}
+
+		if err := rows.Scan(valuePtrs...); err != nil {
+			return nil, err
+		}
+
+		rowMap := make(map[string]any, len(cols))
+		for i, col := range cols {
+			v := values[i]
+
+			if b, ok := v.([]byte); ok {
+				rowMap[col] = string(b)
+			} else {
+				rowMap[col] = v
+			}
+		}
+
+		out = append(out, rowMap)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return out, nil
 }
 
 func (m MySQLConnector) GetDatabaseStructure(projectID int) (*DatabaseStructureResponse, error) {
