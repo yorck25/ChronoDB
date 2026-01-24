@@ -2,7 +2,7 @@ CREATE TABLE users
 (
     id         SERIAL PRIMARY KEY,
     first_name VARCHAR(128),
-    last_name VARCHAR(255),
+    last_name VARCHAR(255) default '',
     email      VARCHAR(128) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -44,10 +44,10 @@ CREATE TABLE projects
 );
 
 CREATE TABLE projects_credentials (
-    project_id int REFERENCES projects (id) ON DELETE CASCADE,
-    project_password varchar(255),
-    database_auth jsonb not null,
-    updates_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                      project_id int REFERENCES projects (id) ON DELETE CASCADE,
+                                      project_password varchar(255),
+                                      database_auth jsonb not null,
+                                      updates_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE versions
@@ -108,11 +108,11 @@ VALUES ('PostgreSQL', 'psql', 'PostgreSQL Database Connection'),
        ('MsSQL', 'mssql', 'Microsoft SQL database');
 
 -- ✅ users
-INSERT INTO users (first_name, email, active)
-VALUES ('Alice', 'alice@example.com', true),
-       ('Bob', 'bob@example.com', true),
-       ('Charlie', 'charlie@example.com', false),
-       ('Diana', 'diana@example.com', true);
+INSERT INTO users (first_name, last_name, email, active)
+VALUES ('Alice', 'test','alice@example.com', true),
+       ('Bob', 'test','bob@example.com', true),
+       ('Charlie','test', 'charlie@example.com', false),
+       ('Diana', 'test','diana@example.com', true);
 
 -- ✅ user_login
 INSERT INTO user_login (user_id, username, password_hash, last_login_at, failed_attempts)
