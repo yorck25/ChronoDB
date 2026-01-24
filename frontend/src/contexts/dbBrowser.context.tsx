@@ -10,6 +10,7 @@ interface IDbBrowserContext {
     setActiveTab: React.Dispatch<React.SetStateAction<number | undefined>>;
     getActiveTabFromId: () => IDBBrowserTab | undefined;
     createNewQueryTab: (schemaName?: string, tableName?: string) => void;
+    createNewOverviewTab: (schemaName: string, tableName: string) => void;
 }
 
 export enum BrowserTabType {
@@ -49,6 +50,22 @@ export const DbBrowserContextProvider: FC<{ children: ReactNode }> = ({children}
         setActiveTab(id);
     }
 
+    const createNewOverviewTab = (schemaName: string, tableName: string) => {
+        const id = Math.floor(Math.random() * 990) + 10;
+
+        const newOverviewTab: IDBBrowserTab = {
+            id: id,
+            name: 'Overview' + id.toString(),
+            type: BrowserTabType.OVERVIEW,
+            schemaName: schemaName,
+            tableName: tableName,
+            createdAt: new Date()
+        }
+
+        setBrowserTabs((prev) => [...prev, newOverviewTab]);
+        setActiveTab(id);
+    }
+
     const getProjectIdFromUri = () => {
         return ""
     }
@@ -66,7 +83,8 @@ export const DbBrowserContextProvider: FC<{ children: ReactNode }> = ({children}
         setActiveTab,
         getProjectIdFromUri,
         getActiveTabFromId,
-        createNewQueryTab
+        createNewQueryTab,
+        createNewOverviewTab
     }
 
     return (

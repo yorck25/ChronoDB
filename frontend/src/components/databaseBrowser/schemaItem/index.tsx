@@ -30,6 +30,7 @@ export const SchemaItem = ({schema, expandedSchemas, expandedTables, onSchemaTog
                 <ul className={styles['table-item-list']}>
                     {schema.tables.map(table => (
                         <TableItem
+                            schemaName={schema.schemaName}
                             key={table.tableName}
                             table={table}
                             expandedTables={expandedTables}

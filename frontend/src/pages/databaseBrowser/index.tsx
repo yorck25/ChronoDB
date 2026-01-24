@@ -77,7 +77,7 @@ export const DatabaseBrowser = () => {
                 <div className={styles['database-browser-detail-container']}>
                     <DetailTabBar/>
 
-                    {activeTabObj ? (
+                    {activeTabObj && (
                         <div>
                             {activeTabObj.type === BrowserTabType.QUERY && (
                                 <QueryTab project={project.project}/>
@@ -87,8 +87,6 @@ export const DatabaseBrowser = () => {
                                 <div>Overview</div>
                             )}
                         </div>
-                    ) : (
-                        <div>No Tab</div>
                     )}
                 </div>
             </div>

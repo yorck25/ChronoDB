@@ -4,12 +4,13 @@ import styles from './style.module.scss';
 import {ColumnItem} from "../columItem";
 import {useDbBrowserContext} from "../../../contexts/dbBrowser.context.tsx";
 
-export const TableItem = ({table, expandedTables, onToggle}: {
+export const TableItem = ({schemaName, table, expandedTables, onToggle}: {
+    schemaName: string,
     table: ITableStructureResponse,
     expandedTables: Set<string>,
     onToggle: (tableName: string) => void
 }) => {
-    const {setOpenTable} = useDbBrowserContext();
+    const {setOpenTable, createNewOverviewTab} = useDbBrowserContext();
 
     const isTableExpanded = (tableName: string) => {
         return expandedTables.has(tableName);
@@ -17,6 +18,7 @@ export const TableItem = ({table, expandedTables, onToggle}: {
 
     const handleDoubleClick = () => {
         setOpenTable(table.tableName);
+        createNewOverviewTab(schemaName, table.tableName);
     }
 
     return (

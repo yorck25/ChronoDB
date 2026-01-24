@@ -83,7 +83,7 @@ export const QueryTab = ({project}: IQueryTabProps) => {
 
             <div onKeyDown={handleKeyDown} className={styles['query-input-section']}>
                 <form onSubmit={sendQuery}>
-                    <Textarea id={'query-input'} value={query} handleInput={handleInput}/>
+                    <Textarea placeholder={'Enter Query...'} id={'query-input'} value={query} handleInput={handleInput}/>
                 </form>
             </div>
 
