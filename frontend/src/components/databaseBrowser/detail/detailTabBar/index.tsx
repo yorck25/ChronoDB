@@ -64,7 +64,7 @@ const BrowserTabItem = ({browserTab}: IBrowserTabItemProps) => {
         <li
             className={`${styles['tab-item']} ${activeTab === browserTab.id ? styles.active : ''}`}
             onClick={() => setActiveTab(browserTab.id)}
-            onMouseDown={(e) => handleMouseDown(e)}
+            onDblClick={(e) => handleMouseDown(e)}
         >
             <p className={styles['tab-name']}>{browserTab.name}</p>
 

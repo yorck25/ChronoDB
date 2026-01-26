@@ -4,13 +4,18 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
-  width: 100%;
+  //needs to be fixed
+  width: calc(95% - $spacing-lg);
+  padding: $spacing-md $spacing-lg;
+
+  .query-tab-result-headline {
+    font-size: 18px;
+  }
 
   .options-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 100%;
     background: $gray-200;
     border: 1px solid $border-color;
     padding: $spacing-xs $spacing-md;
@@ -25,11 +30,11 @@
 
   .query-input-section {
     width: 100%;
+    min-width: 0;
   }
 
   .query-response-section {
     padding: $spacing-sm $spacing-lg;
-    width: 100%;
     background: $white;
     border: 1px solid $border-color;
     border-radius: $border-radius-medium;

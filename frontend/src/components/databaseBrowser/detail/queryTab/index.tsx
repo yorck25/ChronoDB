@@ -83,42 +83,47 @@ export const QueryTab = ({project}: IQueryTabProps) => {
 
             <div onKeyDown={handleKeyDown} className={styles['query-input-section']}>
                 <form onSubmit={sendQuery}>
-                    <Textarea placeholder={'Enter Query...'} id={'query-input'} value={query} handleInput={handleInput}/>
+                    <Textarea placeholder={'Enter Query...'} id={'query-input'} value={query}
+                              handleInput={handleInput}/>
                 </form>
             </div>
 
-            <div className={styles['query-response-section']}>
-                <div className={styles['info-container']}>
-                    {queryResponse?.rowsAffected && (
-                        <p>Rows affected {queryResponse.rowsAffected}</p>
-                    )}
-                    {queryResponse?.message && (
-                        <p>{queryResponse.message}</p>
-                    )}
-                </div>
+            {queryResponse && (
+                <div className={styles['query-response-section']}>
+                    <p className={styles['query-tab-result-headline']}>Query Result</p>
 
-                <table>
-                    <thead>
-                    <tr>
-                        {columns.map((c) => (
-                            <th key={c}>{c}</th>
-                        ))}
-                    </tr>
-                    </thead>
+                    <div className={styles['info-container']}>
+                        {queryResponse?.rowsAffected && (
+                            <p>Rows affected {queryResponse.rowsAffected}</p>
+                        )}
+                        {queryResponse?.message && (
+                            <p>{queryResponse.message}</p>
+                        )}
+                    </div>
 
-                    <tbody>
-                    {rows.map((row, rowIndex) => (
-                        <tr key={row?.id + rowIndex}>
-                            {columns.map((col) => (
-                                <td key={`${rowIndex}-${col}`}>
-                                    {formatCellValue(row?.[col])}
-                                </td>
+                    <table>
+                        <thead>
+                        <tr>
+                            {columns.map((c) => (
+                                <th key={c}>{c}</th>
                             ))}
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+
+                        <tbody>
+                        {rows.map((row, rowIndex) => (
+                            <tr key={row?.id + rowIndex}>
+                                {columns.map((col) => (
+                                    <td key={`${rowIndex}-${col}`}>
+                                        {formatCellValue(row?.[col])}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     )
 }

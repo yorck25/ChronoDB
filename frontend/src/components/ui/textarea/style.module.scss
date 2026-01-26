@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: variables.$spacing-sm;
   width: 100%;
+  min-width: 0;
 
   label {
     font-size: 14px;
@@ -18,31 +19,36 @@
     margin: 0;
   }
 
-  textarea {
-    resize: none;
+  .input_wrapper {
     width: 100%;
-    padding: 12px variables.$spacing-md;
-    border: 1px solid variables.$border-color;
-    border-radius: variables.$border-radius-medium;
-    font-size: 14px;
-    font-family: variables.$primary-font-family;
-    color: variables.$primary-font-color;
-    background: variables.$white;
-    transition: all variables.$transition-fast;
+    min-width: 0;
 
-    &::placeholder {
-      color: variables.$placeholder-font-color;
-    }
+    textarea {
+      resize: none;
+      width: 100%;
+      padding: 12px variables.$spacing-md;
+      border: 1px solid variables.$border-color;
+      border-radius: variables.$border-radius-medium;
+      font-size: 14px;
+      font-family: variables.$primary-font-family;
+      color: variables.$primary-font-color;
+      background: variables.$white;
+      transition: all variables.$transition-fast;
 
-    &:focus {
-      outline: none;
-      border-color: variables.$highlight-purple;
-      box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.1);
-    }
+      &::placeholder {
+        color: variables.$placeholder-font-color;
+      }
 
-    &:disabled {
-      background: variables.$gray-100;
-      cursor: not-allowed;
+      &:focus {
+        outline: none;
+        border-color: variables.$highlight-purple;
+        box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.1);
+      }
+
+      &:disabled {
+        background: variables.$gray-100;
+        cursor: not-allowed;
+      }
     }
   }
 }
