@@ -21,6 +21,9 @@ $dark-red: #f6806d;
 $green: #2aac24;
 $orange: #efa70e;
 $highlight-blue: #0c8ce9;
+$highlight-purple: #daadff;
+$highlight-purple-light: rgba(218, 173, 255, 0.35);
+$highlight-purple-lighter: rgba(218, 173, 255, 0.20);
 
 $gray-100: #f8f9fa;
 $gray-200: #f1f3f5;
@@ -44,7 +47,7 @@ $spacing-lg: 24px;
 $spacing-xl: 40px;
 
 //borders
-$border-color: $gray-300;
+$border-color: $gray-400;
 $border-radius-small: 4px;
 $border-radius-medium: 8px;
 $border-radius-large: 12px;

@@ -1,0 +1,56 @@
+@use "../../../styles/variables" as *;
+
+.schema-item {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: column;
+  cursor: pointer;
+
+  .item-name {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+    z-index: 1;
+
+    .marker {
+      z-index: 999;
+      width: 5px;
+      height: 100%;
+      background-color: $highlight-purple;
+    }
+
+    .icon-container {
+      margin-left: $spacing-sm;
+      height: 20px;
+      aspect-ratio: 1 / 1;
+      rotate: 270deg;
+
+      svg {
+        fill: $gray-900;
+
+      }
+    }
+
+    .name {
+      margin-left: $spacing-sm;
+    }
+  }
+
+  .table-item-list {
+    padding: 0;
+    width: 100%;
+    list-style: none;
+  }
+
+  &.expanded {
+    .item-name {
+      background-color: $highlight-purple-light;
+
+      .icon-container {
+        rotate: 0deg;
+      }
+    }
+  }
+}

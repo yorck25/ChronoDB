@@ -7,3 +7,7 @@ type ConnectionType struct {
 	Description string `db:"description" json:"description"`
 	Active      bool   `db:"active" json:"active"`
 }
+
+type DatabaseQueryRequest struct {
+	Query string `json:"query"`
+}

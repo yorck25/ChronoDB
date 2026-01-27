@@ -1,0 +1,35 @@
+@use "../../../../styles/variables" as *;
+
+.query-tab {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  //needs to be fixed
+  width: calc(95% - $spacing-lg);
+  padding: $spacing-md $spacing-lg;
+
+  .query-tab-result-headline {
+    font-size: 18px;
+  }
+
+  .options-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: $gray-200;
+    border: 1px solid $border-color;
+    padding: $spacing-xs $spacing-md;
+    box-shadow: $shadow-light;
+
+    .button-wrapper {
+      height: 26px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .query-input-section {
+    width: 100%;
+    min-width: 0;
+  }
+}

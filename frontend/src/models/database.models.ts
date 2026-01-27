@@ -16,3 +16,10 @@ export interface IColumnStructureResponse {
     columnName: string;
     dataType: string;
 }
+
+export interface IDatabaseQueryResult {
+    kind?: string;
+    rows?: any[];
+    rowsAffected?: number;
+    message?: string;
+}

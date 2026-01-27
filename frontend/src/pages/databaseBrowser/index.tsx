@@ -1,115 +1,95 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useParams} from "react-router-dom";
-import {useDatabaseWorkerContext} from "../../contexts/databaseWorker.context.tsx";
-import type {
-    IColumnStructureResponse,
-    IDatabaseStructureResponse,
-    ISchemaStructureResponse, ITableStructureResponse
-} from "../../models/database.models.ts";
-
-const ColumnItem = ({column}: { column: IColumnStructureResponse }) => (
-    <li>
-        <p>{column.columnName} <span>{column.dataType}</span></p>
-    </li>
-);
-
-const TableItem = ({table, expandedTables, onToggle}: {
-    table: ITableStructureResponse,
-    expandedTables: Set<string>,
-    onToggle: (tableName: string) => void
-}) => (
-    <li>
-        <p onClick={() => onToggle(table.tableName)}>{table.tableName}</p>
-        {expandedTables.has(table.tableName) && (
-            <ul>
-                {table.columns.map((column: IColumnStructureResponse) => (
-                    <ColumnItem key={`${column.columnName}_${column.dataType}`} column={column}/>
-                ))}
-            </ul>
-        )}
-    </li>
-);
-
-const SchemaItem = ({schema, expandedSchemas, expandedTables, onSchemaToggle, onTableToggle}: {
-    schema: ISchemaStructureResponse,
-    expandedSchemas: Set<string>,
-    expandedTables: Set<string>,
-    onSchemaToggle: (schemaName: string) => void,
-    onTableToggle: (tableName: string) => void
-}) => (
-    <li>
-        <p onClick={() => onSchemaToggle(schema.schemaName)}>{schema.schemaName}</p>
-        {expandedSchemas.has(schema.schemaName) && (
-            <ul>
-                {schema.tables.map(table => (
-                    <TableItem
-                        key={table.tableName}
-                        table={table}
-                        expandedTables={expandedTables}
-                        onToggle={onTableToggle}
-                    />
-                ))}
-            </ul>
-        )}
-    </li>
-);
+import {Header} from "../../components/databaseBrowser/header";
+import {useProjectContext} from "../../contexts/projects.context.tsx";
+import type {IProjectWithUsers} from "../../models/projects.models.ts";
+import {DatabaseStructure} from "../../components/databaseBrowser/databaseStructure";
+import styles from './style.module.scss';
+import {DetailTabBar} from "../../components/databaseBrowser/detail/detailTabBar";
+import {BrowserTabType, useDbBrowserContext} from "../../contexts/dbBrowser.context.tsx";
+import {QueryTab} from "../../components/databaseBrowser/detail/queryTab";
 
 export const DatabaseBrowser = () => {
-    const {fetchDatabaseStructure} = useDatabaseWorkerContext();
+    const {getProjectById, fetchProjectById} = useProjectContext();
+    const {activeTab, browserTabs, getActiveTabFromId} = useDbBrowserContext();
     const {projectId} = useParams();
 
-    const [loading, setLoading] = useState(false);
-    const [databaseStructure, setDatabaseStructure] = useState<IDatabaseStructureResponse>();
-    const [expandedSchemas, setExpandedSchemas] = useState<Set<string>>(new Set());
-    const [expandedTables, setExpandedTables] = useState<Set<string>>(new Set());
+    const [project, setProject] = useState<IProjectWithUsers | undefined>();
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        setLoading(true);
-        fetchDatabaseStructure(Number(projectId)).then(structure => {
-            if (structure) {
-                setDatabaseStructure(structure);
-            } else {
-                console.log("Failed to fetch database structure");
-            }
-            setLoading(false);
-        });
+    const numericProjectId = useMemo(() => {
+        const id = Number(projectId);
+        return Number.isFinite(id) && id > 0 ? id : undefined;
     }, [projectId]);
 
-    const handleSchemaToggle = (schemaName: string) => {
-        setExpandedSchemas(prev => {
-            const newSet = new Set(prev);
-            newSet.has(schemaName) ? newSet.delete(schemaName) : newSet.add(schemaName);
-            return newSet;
-        });
-    };
+    useEffect(() => {
+        let cancelled = false;
 
-    const handleTableToggle = (tableName: string) => {
-        setExpandedTables(prev => {
-            const newSet = new Set(prev);
-            newSet.has(tableName) ? newSet.delete(tableName) : newSet.add(tableName);
-            return newSet;
-        });
-    };
+        const run = async () => {
+            if (!numericProjectId) {
+                setProject(undefined);
+                setLoading(false);
+                return;
+            }
 
-    if (loading) return <p>Loading database structure...</p>;
+            const cached = getProjectById(numericProjectId);
+            if (cached) {
+                setProject(cached);
+                setLoading(false);
+                return;
+            }
 
-    if (!databaseStructure && !loading) return <p>No database structure found.</p>;
+            setLoading(true);
+            try {
+                const res = await fetchProjectById(numericProjectId);
+                if (cancelled) return;
+                setProject(res ?? undefined);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+
+        run();
+        return () => {
+            cancelled = true;
+        };
+    }, [numericProjectId, getProjectById, fetchProjectById]);
+
+    const activeTabObj = useMemo(() => {
+        return getActiveTabFromId()
+    }, [activeTab, browserTabs]);
+
+    if (loading && !project) {
+        return <p>Loading…</p>
+    }
+
+    if (!project) {
+        return <p>Project not found.</p>
+    }
 
     return (
-        <div>
-            <h1>Database Structure</h1>
-            <ul>
-                {databaseStructure?.schemas.map(schema => (
-                    <SchemaItem
-                        key={schema.schemaName}
-                        schema={schema}
-                        expandedSchemas={expandedSchemas}
-                        expandedTables={expandedTables}
-                        onSchemaToggle={handleSchemaToggle}
-                        onTableToggle={handleTableToggle}
-                    />
-                ))}
-            </ul>
+        <div className={styles['database-browser']}>
+            <Header project={project.project}/>
+
+            <div className={styles['database-browser-body']}>
+                <DatabaseStructure project={project.project}/>
+
+                <div className={styles['database-browser-detail-container']}>
+                    <DetailTabBar/>
+
+                    {activeTabObj && (
+                        <div>
+                            {activeTabObj.type === BrowserTabType.QUERY && (
+                                <QueryTab project={project.project}/>
+                            )}
+
+                            {activeTabObj.type === BrowserTabType.OVERVIEW && (
+                                <div>Overview</div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

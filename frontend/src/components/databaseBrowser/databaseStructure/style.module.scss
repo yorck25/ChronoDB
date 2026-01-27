@@ -1,0 +1,50 @@
+@use "../../../styles/variables" as *;
+
+.database-structure {
+  height: 100%;
+  border-right: 2px solid $gray-500;
+
+  .divider {
+    height: 2px;
+    background-color: $gray-500;
+  }
+}
+
+.structure-header {
+  padding: 1rem 2.5rem;
+  height: 20%;
+  max-width: 100%;
+
+  .headline {
+    font-size: 24px;
+  }
+
+  .filter-list {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: $spacing-sm;
+
+    .filter-item {
+      background-color: $highlight-purple;
+      border: 1px solid $highlight-purple;
+      border-radius: $border-radius-medium;
+      padding: $spacing-xs $spacing-sm;
+    }
+  }
+}
+
+.structure-list {
+  height: 80%;
+  padding: 2rem 0;
+  overflow-y: auto;
+
+  .structure-list-list {
+    height: 50%;
+    margin: 0;
+    padding: 1rem 0;
+    list-style: none;
+  }
+}
+
+

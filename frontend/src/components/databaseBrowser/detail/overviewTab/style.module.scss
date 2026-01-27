@@ -1,0 +1,53 @@
+@use "../../../../styles/variables" as *;
+
+.overview-tab {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  background: $primary-background-color;
+
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 0 $spacing-md;
+  }
+
+  .tab {
+    background: transparent;
+    border: none;
+    padding: 10px 2px;
+    font-size: 14px;
+    color: $muted-font-color;
+    cursor: pointer;
+    position: relative;
+
+    &.active {
+      color: $highlight-purple;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 2px;
+        background: $highlight-purple;
+        border-radius: 999px;
+      }
+    }
+  }
+
+  .panel {
+    padding: 0 $spacing-md $spacing-md $spacing-md;
+  }
+
+  .placeholder {
+    border: 1px dashed $border-color;
+    border-radius: $border-radius-large;
+    padding: $spacing-lg;
+    color: $muted-font-color;
+    background: $gray-100;
+  }
+}
