@@ -3,6 +3,7 @@ package databaseWorker
 import (
 	"backend/connectors"
 	"backend/core"
+	"fmt"
 )
 
 func HandleGetDatabaseVersion(ctx *core.WebContext) error {
@@ -74,6 +75,15 @@ func HandleDatabaseQuery(ctx *core.WebContext) error {
 	res, err := conn.ExecuteQuery(projectID, dbqr.Query)
 	if err != nil {
 		return ctx.InternalError(err.Error())
+	}
+
+	pt, err := GetPerformanceType(dbqr.Query)
+	if err != nil {
+		return ctx.InternalError("invalid query")
+	}
+
+	if pt == "ddl" {
+		fmt.Println("ddl was performed")
 	}
 
 	return ctx.Sucsess(res)

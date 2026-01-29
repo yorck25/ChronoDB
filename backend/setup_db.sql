@@ -50,26 +50,23 @@ CREATE TABLE projects_credentials (
                                       updates_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE versions
+create table schema_commits
 (
-    id         SERIAL PRIMARY KEY,
-    version    varchar(50) NOT NULL,
-    up         jsonb,
-    down       jsonb,
-    state      varchar(128)
-        CONSTRAINT state_check CHECK (state IN ('pending', 'completed', 'failed')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    applied_at TIMESTAMP,
-    project_id INT REFERENCES projects (id)
-);
-
-CREATE TABLE version_audit
-(
-    id         SERIAL PRIMARY KEY,
-    version_id INT REFERENCES versions (id),
-    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    applied_by INT REFERENCES users (id),
-    notes      varchar(512)
+    id              bigserial primary key,
+    project_id      bigint      not null,
+    checksum        text        not null,
+    parent_checksum text        null,
+    action_type     text        not null
+        check (action_type in ('initial', 'full', 'incremental')),
+    title           text        not null default '',
+    message         text        not null default '',
+    up_script       text        not null,
+    down_script     text        not null default '',
+    created_at      timestamptz not null default now(),
+    author_user_id  int         null references users (id),
+    deleted_at      timestamptz null,
+    unique (project_id, checksum),
+    unique (project_id, parent_checksum, checksum)
 );
 
 CREATE TABLE user_role
@@ -127,41 +124,6 @@ VALUES (1, 'Analytics Platform', 'A data analytics web application.', 'public', 
        (2, 'E-commerce Backend', 'Backend API for online store.', 'private', 2),
        (3, 'IoT Dashboard', 'Real-time dashboard for IoT devices.', 'internal', 3),
        (4, 'DB Versioning Tool', 'A tool to manage database schema versions and migrations.', 'public', 1);
-
--- ✅ versions
-INSERT INTO versions (version, up, down, state, applied_at, project_id)
-VALUES ('v1.0.0', '{
-  "migrate": "create tables"
-}', '{
-  "rollback": "drop tables"
-}', 'completed', NOW() - INTERVAL '10 days', 1),
-       ('v1.1.0', '{
-         "migrate": "add analytics views"
-       }', '{
-         "rollback": "drop views"
-       }', 'completed', NOW() - INTERVAL '5 days', 1),
-       ('v1.0.0', '{
-         "migrate": "init ecommerce schema"
-       }', '{
-         "rollback": "drop ecommerce schema"
-       }', 'completed', NOW() - INTERVAL '20 days', 2),
-       ('v1.0.1', '{
-         "migrate": "add payment table"
-       }', '{
-         "rollback": "drop payment table"
-       }', 'pending', NULL, 2),
-       ('v0.9.0', '{
-         "migrate": "create sensors table"
-       }', '{
-         "rollback": "drop sensors"
-       }', 'failed', NOW() - INTERVAL '15 days', 3);
-
--- ✅ version_audit
-INSERT INTO version_audit (version_id, applied_at, applied_by, notes)
-VALUES (1, NOW() - INTERVAL '9 days', 1, 'Initial migration applied successfully.'),
-       (2, NOW() - INTERVAL '4 days', 2, 'Added new analytics views.'),
-       (3, NOW() - INTERVAL '19 days', 2, 'Initial schema setup for e-commerce.'),
-       (5, NOW() - INTERVAL '14 days', 3, 'Migration failed due to missing column.');
 
 -- ✅ user_role
 INSERT INTO user_role (user_id, project_id, role)
