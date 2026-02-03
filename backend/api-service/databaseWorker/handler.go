@@ -4,6 +4,11 @@ import (
 	"backend/connectors"
 	"backend/core"
 	"fmt"
+	"regexp"
+	"strings"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 func HandleGetDatabaseVersion(ctx *core.WebContext) error {
@@ -82,7 +87,45 @@ func HandleDatabaseQuery(ctx *core.WebContext) error {
 		return ctx.InternalError("invalid query")
 	}
 
+	var commitIds []int
+
 	if pt == "ddl" {
+		parent := uuid.New().String()
+		repo := NewRepository(ctx)
+
+		queries := regexp.MustCompile(";+").Split(dbqr.Query, -1)
+		for _, query := range queries {
+			query = strings.TrimSpace(query)
+			if query == "" {
+				continue
+			}
+
+			down := ""
+			if d, ok := DeriveDownScript(query); ok {
+				down = d
+			}
+
+			sc := SchemaCommit{
+				ProjectID:      projectID,
+				Checksum:       uuid.New().String(),
+				ParentChecksum: &parent,
+				ActionType:     ActionFull,
+				Title:          "Full Commit",
+				Message:        string(pt),
+				UpScript:       query,
+				DownScript:     down,
+				CreatedAt:      time.Now(),
+			}
+
+			var commitId int
+			commitId, err = repo.CreateSchemaCommit(sc)
+			if err != nil {
+				return err
+			}
+
+			commitIds = append(commitIds, commitId)
+		}
+
 		fmt.Println("ddl was performed")
 	}
 

@@ -32,7 +32,7 @@ const (
 type SchemaCommit struct {
 	ID int64 `json:"id" db:"id"`
 
-	ProjectID int64 `json:"projectId" db:"project_id"`
+	ProjectID int `json:"projectId" db:"project_id"`
 
 	Checksum       string  `json:"checksum" db:"checksum"`
 	ParentChecksum *string `json:"parentChecksum,omitempty" db:"parent_checksum"`
