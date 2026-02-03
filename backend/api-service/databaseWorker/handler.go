@@ -61,6 +61,12 @@ func HandleGetDatabaseStructure(ctx *core.WebContext) error {
 
 func HandleDatabaseQuery(ctx *core.WebContext) error {
 	var dbqr DatabaseQueryRequest
+
+	userId, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
+
 	if err := ctx.Bind(&dbqr); err != nil {
 		return ctx.BadRequest("invalid input")
 	}
@@ -114,6 +120,7 @@ func HandleDatabaseQuery(ctx *core.WebContext) error {
 				Message:        string(pt),
 				UpScript:       query,
 				DownScript:     down,
+				AuthorUserID:   &userId,
 				CreatedAt:      time.Now(),
 			}
 

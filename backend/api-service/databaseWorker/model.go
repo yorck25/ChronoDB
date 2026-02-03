@@ -44,7 +44,7 @@ type SchemaCommit struct {
 	UpScript   string `json:"upScript" db:"up_script"`
 	DownScript string `json:"downScript" db:"down_script"`
 
-	AuthorUserID *int64     `json:"authorUserId,omitempty" db:"author_user_id"`
+	AuthorUserID *int       `json:"authorUserId,omitempty" db:"author_user_id"`
 	CreatedAt    time.Time  `json:"createdAt" db:"created_at"`
 	DeletedAt    *time.Time `json:"deletedAt,omitempty" db:"deleted_at"`
 }
