@@ -8,6 +8,7 @@ import styles from './style.module.scss';
 import {DetailTabBar} from "../../components/databaseBrowser/detail/detailTabBar";
 import {BrowserTabType, useDbBrowserContext} from "../../contexts/dbBrowser.context.tsx";
 import {QueryTab} from "../../components/databaseBrowser/detail/queryTab";
+import {OverviewTab} from "../../components/databaseBrowser/detail/overviewTab";
 
 export const DatabaseBrowser = () => {
     const {getProjectById, fetchProjectById} = useProjectContext();
@@ -78,15 +79,15 @@ export const DatabaseBrowser = () => {
                     <DetailTabBar/>
 
                     {activeTabObj && (
-                        <div>
+                        <>
                             {activeTabObj.type === BrowserTabType.QUERY && (
                                 <QueryTab project={project.project}/>
                             )}
 
                             {activeTabObj.type === BrowserTabType.OVERVIEW && (
-                                <div>Overview</div>
+                                <OverviewTab project={project.project}/>
                             )}
-                        </div>
+                        </>
                     )}
                 </div>
             </div>

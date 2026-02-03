@@ -15,7 +15,7 @@ export const LoginPage = () => {
     const navigate = useNavigate();
     const {loginRequest} = useAppContext();
 
-    const [loginFormData, setloginFormData] = useState<ILoginFormData>({
+    const [loginFormData, setLoginFormData] = useState<ILoginFormData>({
         username: "",
         password: "",
     });
@@ -29,7 +29,7 @@ export const LoginPage = () => {
 
         const fieldValue = type === "checkbox" ? checked : value;
 
-        setloginFormData((prev) => {
+        setLoginFormData((prev) => {
             const updated = {...prev, [id]: fieldValue};
 
             const valid =
@@ -44,6 +44,8 @@ export const LoginPage = () => {
     };
 
     const handleSubmit = (e: Event) => {
+        e.preventDefault();
+        console.log("test")
         setErrorMessage(undefined);
         setIsLoading(true);
 
@@ -109,7 +111,7 @@ export const LoginPage = () => {
                     </div>
 
                     <div className={styles.form_actions}>
-                        <Button text={"Sign In"}  disabled={!isFormValid}
+                        <Button htmlType={"submit"} text={"Sign In"}  disabled={!isFormValid}
                                 callback={(event?: TargetedMouseEvent<HTMLButtonElement> | undefined) => handleSubmit(event!)}
                                 ariaLabel={"sign in button"} type={ButtonType.Default} isLoading={isLoading}>
                         </Button>
