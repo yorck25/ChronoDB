@@ -258,6 +258,7 @@ func (r *Repository) GetAllProjectsWithUsersForUser(userID int) ([]ProjectWithUs
 
 	return results, nil
 }
+
 func (r *Repository) GetCommits(limit int, offset int, projectId int) ([]databaseWorker.SchemaCommit, error) {
 	var commits []databaseWorker.SchemaCommit
 
@@ -285,4 +286,29 @@ func (r *Repository) GetCommits(limit int, offset int, projectId int) ([]databas
 	}
 
 	return commits, err
+}
+
+func (r *Repository) GetCommitCount(projectId int) (int64, error) {
+	var count int64
+
+	stmt, err := r.db.PrepareNamed(`
+		SELECT COUNT(*)
+		FROM schema_commits
+		WHERE project_id = :projectId;
+	`)
+
+	if err != nil {
+		return 0, err
+	}
+
+	params := map[string]any{
+		"projectId": projectId,
+	}
+
+	err = stmt.Get(&count, params)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, err
 }

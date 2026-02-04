@@ -1,6 +1,9 @@
 package projects
 
-import "time"
+import (
+	"backend/databaseWorker"
+	"time"
+)
 
 type Projects struct {
 	ID             int       `db:"id" json:"id"`
@@ -44,4 +47,9 @@ type UsersForProjectResponse struct {
 type ProjectWithUsers struct {
 	Project Projects                `json:"project"`
 	Users   UsersForProjectResponse `json:"users"`
+}
+
+type CommitRequestWithCount struct {
+	Commits    []databaseWorker.SchemaCommit `json:"commits"`
+	TotalCount int64                         `json:"totalCount"`
 }

@@ -229,5 +229,16 @@ func HandleGetCommits(ctx *core.WebContext) error {
 	if err != nil {
 		return ctx.InternalError(err.Error())
 	}
-	return ctx.Sucsess(commits)
+
+	count, err := repo.GetCommitCount(projectId)
+	if err != nil {
+		return ctx.InternalError(err.Error())
+	}
+
+	response := CommitRequestWithCount{
+		Commits:    commits,
+		TotalCount: count,
+	}
+
+	return ctx.Sucsess(response)
 }
