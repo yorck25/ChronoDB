@@ -4,8 +4,9 @@ import (
 	"backend/connectors"
 	"backend/core"
 	b64 "encoding/base64"
-	"golang.org/x/crypto/bcrypt"
 	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func HandleTestProjectConnection(ctx *core.WebContext) error {
@@ -201,4 +202,32 @@ func GetAllProjectsWithUsersForUser(ctx *core.WebContext) error {
 		return ctx.InternalError(err.Error())
 	}
 	return ctx.Sucsess(projectWithMembers)
+}
+
+func HandleGetCommits(ctx *core.WebContext) error {
+	var limit, offset, projectId int
+
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return ctx.Unauthorized(err.Error())
+	}
+
+	if projectId, err = strconv.Atoi(ctx.Param("projectId")); err != nil {
+		return ctx.BadRequest("invalid projectId header")
+	}
+
+	if offset, err = strconv.Atoi(ctx.Request().Header.Get("offset")); err != nil {
+		return ctx.BadRequest("invalid offset header")
+	}
+
+	if limit, err = strconv.Atoi(ctx.Request().Header.Get("limit")); err != nil {
+		return ctx.BadRequest("invalid limit header")
+	}
+
+	repo := NewRepository(ctx)
+	commits, err := repo.GetCommits(limit, offset, projectId)
+	if err != nil {
+		return ctx.InternalError(err.Error())
+	}
+	return ctx.Sucsess(commits)
 }

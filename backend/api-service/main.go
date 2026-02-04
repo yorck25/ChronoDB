@@ -51,10 +51,10 @@ func main() {
 	mainRoot.PUT("/projects/:id", projects.HandleUpdateProject)
 	mainRoot.DELETE("/projects/:id", projects.HandleDeleteProject)
 	mainRoot.POST("/projects/test-connection", projects.HandleTestProjectConnection)
+	mainRoot.GET("/projects/:projectId/commits", projects.HandleGetCommits)
 
 	mainRoot.GET("/release/project/all", release.HandleGetReleasesForProject)
 	mainRoot.GET("/release/project/latest", release.HandleGetLatestReleasesForProject)
-
 	mainRoot.POST("/version/table/create", version.HandleCreateTable)
 
 	//---------------------------------

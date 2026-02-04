@@ -2,6 +2,7 @@ package projects
 
 import (
 	"backend/core"
+	"backend/databaseWorker"
 	"encoding/json"
 	"fmt"
 	"github.com/jmoiron/sqlx"
@@ -256,4 +257,32 @@ func (r *Repository) GetAllProjectsWithUsersForUser(userID int) ([]ProjectWithUs
 	}
 
 	return results, nil
+}
+func (r *Repository) GetCommits(limit int, offset int, projectId int) ([]databaseWorker.SchemaCommit, error) {
+	var commits []databaseWorker.SchemaCommit
+
+	stmt, err := r.db.PrepareNamed(`
+		SELECT *
+		FROM schema_commits
+		WHERE project_id = :projectId
+		ORDER BY created_at
+		OFFSET :offset LIMIT :limit
+	`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	params := map[string]any{
+		"limit":     limit,
+		"offset":    offset,
+		"projectId": projectId,
+	}
+
+	err = stmt.Select(&commits, params)
+	if err != nil {
+		return nil, err
+	}
+
+	return commits, err
 }
