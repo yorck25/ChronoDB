@@ -1,16 +1,16 @@
 import {
     createContext,
     useContext,
-    useEffect,
     useState,
     type Dispatch,
     type FC,
-    type ReactNode,
+    type ReactNode, useEffect,
 } from "react";
 import type {ICreateProjectRequest, IProjectWithUsers} from "../models/projects.models";
 import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
 import type {DatabaseAuthData} from "../components/projects/createProjectCredentailsForm/databaseCredentialsForm";
 import {BASE_API_URL} from "../lib/variables.ts";
+import type {ISchemaCommitResponse} from "../models/database.models.ts";
 
 const API_BASE_URL = BASE_API_URL;
 
@@ -22,6 +22,8 @@ interface IProjectContext {
     createProject: (cpr: ICreateProjectRequest) => Promise<boolean>;
     testConnection: (authData: DatabaseAuthData) => Promise<boolean>;
     fetchProjectById: (projectId: number) => Promise<IProjectWithUsers | undefined>;
+    fetchProjects: () => void;
+    fetchProjectsCommits: (projectId: number, offset?: number, limit?: number) => Promise<ISchemaCommitResponse | undefined>;
 }
 
 const ProjectContext = createContext<IProjectContext | undefined>(undefined);
@@ -30,8 +32,30 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
     const [projects, setProjects] = useState<IProjectWithUsers[]>();
 
     useEffect(() => {
+        //TODO: Improve this
         fetchProjects();
     }, []);
+
+    const fetchProjectsCommits = async (projectId: number, offset?: number, limit?: number) => {
+        try {
+            const myHeaders = setAuthHeader();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("offset", String(offset ?? 0))
+            myHeaders.append("limit", String(limit ?? 0))
+
+            const requestOptions: RequestInit = {
+                method: NetworkAdapter.GET,
+                headers: myHeaders,
+            };
+
+            const res = await fetch(`${API_BASE_URL}/projects/${projectId}/commits`, requestOptions);
+            if (!res.ok) throw new Error(res.statusText);
+
+            return await res.json();
+        } catch (e) {
+            console.error("Failed to fetch projects:", e);
+        }
+    }
 
     const fetchProjects = async () => {
         try {
@@ -72,9 +96,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
             const res = await fetch(`${API_BASE_URL}/projects/${projectId}`, requestOptions);
             if (!res.ok) throw new Error(res.statusText);
 
-            const data: IProjectWithUsers = await res.json();
-            setProjects((prev) => (prev ? [...prev, data] : [data]));
-            return data;
+            return await res.json();
         } catch (e) {
             console.error("Failed to fetch project:", e);
             return undefined;
@@ -141,6 +163,8 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
         createProject,
         testConnection,
         fetchProjectById,
+        fetchProjects,
+        fetchProjectsCommits
     };
 
     return (

@@ -23,3 +23,23 @@ export interface IDatabaseQueryResult {
     rowsAffected?: number;
     message?: string;
 }
+
+export interface ISchemaCommitResponse {
+    commits: ISchemaCommit[];
+    totalCount: number;
+}
+
+export interface ISchemaCommit {
+    id: number;
+    projectId: number;
+    checksum: string;
+    parentChecksum?: string;
+    actionType: string;
+    title: string;
+    message: string;
+    upScript: string;
+    downScript: string;
+    authorUserId?: string;
+    createdAt: string;
+    deletedAt?: string;
+}
