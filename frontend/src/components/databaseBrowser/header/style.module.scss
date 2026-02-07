@@ -40,3 +40,95 @@
     gap: 0.5rem;
   }
 }
+
+.commitHistory {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  max-height: min(70vh, 720px);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-md;
+
+  &Left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &Right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.metaPill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: $spacing-sm;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid $gray-300;
+  background: $gray-100;
+  box-shadow: $shadow-light;
+}
+
+.metaLabel {
+  font-size: 12px;
+  color: $muted-font-color;
+}
+
+.metaValue {
+  font-weight: 700;
+  font-size: 14px;
+  color: $primary-font-color;
+}
+
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: $muted-font-color;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border-radius: $border-radius-medium;
+  border: 1px solid $gray-300;
+  font-size: 14px;
+  transition: $transition-fast;
+
+  &::placeholder {
+    color: $placeholder-font-color;
+  }
+
+  &:focus {
+    border-color: $highlight-blue;
+    box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.15);
+    outline: none;
+  }
+}
+
+.footerBar {
+  padding-top: $spacing-sm;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid $gray-200;
+}

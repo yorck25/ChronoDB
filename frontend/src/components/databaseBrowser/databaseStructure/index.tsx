@@ -18,7 +18,7 @@ export const DatabaseStructure = ({project}: IDatabaseStructureProps) => {
 
             <div className={styles.divider}/>
 
-            <StructureList projectId={project.id}/>
+            <StructureList projectId={project?.id}/>
         </div>
     )
 }
