@@ -1,5 +1,18 @@
 # Database Worker Middleware
 
+## Local Development Setup
+
+Set the env variables. 
+
+```env
+JWT_SECRET="mySecretKey"
+PSQL_HOST="127.0.0.1"
+PSQL_PORT="5432"
+PSQL_USER="ydombrowsky"
+PSQL_PASSWORD=""
+PSQL_DATABASE="public"
+```
+
 ## Overview
 
 The **Database Worker Middleware** resolves project-specific database access for all routes under:
