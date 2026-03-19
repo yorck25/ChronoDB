@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${PSQL_USER}
+      POSTGRES_PASSWORD: ${PSQL_PASSWORD}
+      POSTGRES_DB: ${PSQL_DATABASE}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/setup_db.sql:/docker-entrypoint-initdb.d/setup_db.sql
+    ports:
+      - "${PSQL_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PSQL_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api-service:
+    build: ./services/api-service
+    container_name: api-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  gui:
+    build: ./gui
+    container_name: gui
+    restart: always
+    depends_on:
+      api-service:
+        condition: service_healthy
+    environment:
+      API_URL: http://api-service:8080
+    ports:
+      - "${FRONTEND_PORT}:80"
+
+volumes:
+  postgres-data:

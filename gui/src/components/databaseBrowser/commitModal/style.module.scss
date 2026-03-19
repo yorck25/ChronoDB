@@ -1,0 +1,137 @@
+@use "../../../styles/variables" as *;
+
+.commitHistory {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  max-height: 60dvh;
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $spacing-md;
+
+    &Left {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+      flex: 1;
+      min-width: 0;
+
+      .metaPill {
+        display: inline-flex;
+        align-items: baseline;
+        gap: $spacing-sm;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid $gray-300;
+        background: $gray-100;
+        box-shadow: $shadow-light;
+
+        .metaLabel {
+          font-size: 12px;
+          color: $muted-font-color;
+        }
+
+        .metaValue {
+          font-weight: 700;
+          font-size: 14px;
+          color: $primary-font-color;
+        }
+      }
+
+      .searchWrap {
+        position: relative;
+        flex: 1;
+
+        .searchInput {
+          width: 100%;
+          padding: 10px 12px 10px 36px;
+          border-radius: $border-radius-medium;
+          border: 1px solid $gray-300;
+          font-size: 14px;
+          transition: $transition-fast;
+
+          &::placeholder {
+            color: $placeholder-font-color;
+          }
+
+          &:focus {
+            border-color: $highlight-blue;
+            box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.15);
+            outline: none;
+          }
+        }
+      }
+    }
+
+    &Right {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+  }
+}
+
+.commit-card-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  gap: $spacing-md;
+
+  .commit-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: $border-radius-medium;
+    border: 1px solid $highlight-purple-light;
+    background-color: $gray-100;
+    gap: $spacing-md 0;
+    padding: $spacing-sm;
+    transition: background-color ease-in-out 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $highlight-purple-lighter;
+    }
+
+    .row {
+      &First {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+
+        p {
+          margin: 0;
+        }
+      }
+
+      &Second {
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+}
+
+.footerBar {
+  padding-top: $spacing-sm;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid $gray-200;
+}
+
+.selectedCommitContainer {
+  .commit-detail-header {
+    display: flex;
+    height: 10%;
+
+    svg {
+      fill: $black;
+    }
+  }
+
+}
